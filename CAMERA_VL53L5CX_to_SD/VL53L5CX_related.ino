@@ -1,9 +1,19 @@
+
+/* Enable VL53L5CX */
+void PowerON_ToF()
+{
+  pinMode(PwrEn, OUTPUT);
+  pinMode(LPn, OUTPUT);
+  digitalWrite(PwrEn, HIGH); //Enable VL53L5CX
+  digitalWrite(LPn, HIGH); //Disable VL53L5CX Low Power mode
+}
+
 /* Initialize VL53L5CX */
 void InitToF()
 {
   myImager.setWireMaxPacketSize(128); // Increase default from 32 bytes to 128 - not supported on all platforms
 
-  Serial.println("Initializing VL53L5CX.");
+  Serial.println(F("Initializing VL53L5CX."));
   while (myImager.begin() == false)
   {
     Serial.println(F("Connection to VL53L5CX failed. Retrying."));
@@ -32,7 +42,7 @@ void getToFsample()
 
 
       sprintf(filename, "ToF%03d.csv", lecture_number);
-      Serial.print("Saving lecture as ");
+      Serial.print(F("Saving lecture as "));
       Serial.print(filename);
       Serial.println("");
 

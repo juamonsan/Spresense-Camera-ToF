@@ -43,38 +43,6 @@ void printError(enum CamErr err)
   }
 }
 
-/**
-   Callback from Camera library when video frame is captured.
-*/
-
-void CamCB(CamImage img)
-{
-
-  /* Check the img instance is available or not. */
-
-  if (img.isAvailable())
-  {
-
-    /* If you want RGB565 data, convert image data format to RGB565 */
-
-    img.convertPixFormat(CAM_IMAGE_PIX_FMT_RGB565);
-
-    /* You can use image data directly by using getImgSize() and getImgBuff().
-       for displaying image to a display, etc. */
-
-    Serial.print("Image data size = ");
-    Serial.print(img.getImgSize(), DEC);
-    Serial.print(" , ");
-
-    Serial.print("buff addr = ");
-    Serial.print((unsigned long)img.getImgBuff(), HEX);
-    Serial.println("");
-  }
-  else
-  {
-    Serial.println("Failed to get video stream image");
-  }
-}
 
 /* Initialize camera */
 void InitCamera()
@@ -104,8 +72,8 @@ void InitCamera()
 
   Serial.println("Set still picture format");
   err = theCamera.setStillPictureImageFormat(
-          CAM_IMGSIZE_QUADVGA_H,
-          CAM_IMGSIZE_QUADVGA_V,
+          CAM_IMGSIZE_VGA_H,
+          CAM_IMGSIZE_VGA_V,
           CAM_IMAGE_PIX_FMT_JPG);
   if (err != CAM_ERR_SUCCESS)
   {

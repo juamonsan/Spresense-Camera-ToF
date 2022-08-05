@@ -11,7 +11,7 @@
   Sony's Spresense libraries are used ( https://github.com/sonydevworld/spresense-arduino-compatible )
   SparkFun's VL53L5CX library is used ( http://librarymanager/All#SparkFun_VL53L5CX )
 
-  NOTE: Memory needs to be increased to 1024KB at Arduino IDE Tools menu to run this code.
+  NOTE: Memory needs to be increased if JPG quality is increased. Can be done at Arduino IDE Tools menu.
 
   Juan M. Montes - jmontes@atc.us.es
   ORCID: 0000-0002-0983-2386
@@ -32,8 +32,11 @@
 
 #define TOTAL_MEASUREMENTS (10)
 
+const bool serialwait = false; //true if we wait for serial connection to begin the program.
+
 const int PwrEn = 13; //Needed for ST's VL53L5CX-SATEL board. PwrEn pin needs to go here.
 const int LPn = 12; //Needed for ST's VL53L5CX-SATEL board. LPn pin needs to go here.
+const unsigned int capture_delay_ms = 6000; //How long we do the delay between captures (in ms)
 
 SDClass SD;  /**< SDClass object */
 File myFile; /**< File object */
@@ -46,7 +49,7 @@ VL53L5CX_ResultsData measurementData; // Result data class structure, 1356 byes 
 int imageResolution = 0; // Used to pretty print output
 int imageWidth = 0;      // Used to pretty print output
 
-int lecture_number = 0; //Used as counter and for file naming
+unsigned int lecture_number = 0; //Used as counter and for file naming
 char filename[16] = {0}; //For file naming
 
 
@@ -57,15 +60,18 @@ char filename[16] = {0}; //For file naming
 void setup()
 {
   /* Initialize digital pins */
-  pinMode(PwrEn, OUTPUT);
-  pinMode(LPn, OUTPUT);
-  digitalWrite(PwrEn, HIGH); //Enable VL53L5CX
-  digitalWrite(LPn, HIGH); //Disable VL53L5CX Low Power mode
+  InitLEDs();
+  PowerON_ToF();
+
 
   /* Initialize Serial */
   Serial.begin(115200);
-  while (!Serial) {
-    ; /* wait for serial port to connect. Needed for native USB port only */
+  if (serialwait)
+  {
+    while (!Serial)
+    {
+      ; /* wait for serial port to connect. Needed for native USB port only */
+    }
   }
   //delay(1000);
   Serial.println("Booting...");
@@ -103,14 +109,8 @@ void loop()
   }
 
   lecture_number++;
-  delay(1000); // 1s delay between polling
 
-}
+  delay_LEDs(capture_delay_ms);
+  //delay(1000); // 1s delay between polling
 
-
-void SystemSleep()
-{
-  Serial.println("End.");
-  digitalWrite(PwrEn, LOW); //Disable VL53L5CX
-  while (1);
 }
