@@ -34,7 +34,7 @@ opts.ExtraColumnsRule = "ignore";
 opts.EmptyLineRule = "read";
 
 % Import the data
-ToF1 = readtable("Test_data/Data3_Hands/ToF006.csv", opts);
+ToF1 = readtable("Test_data/Data3_Hands/ToF004.csv", opts); %Change this filepath to the desired ToF data file
 
 %% Convert to output type
 ToF1 = table2array(ToF1);
@@ -43,7 +43,7 @@ ToF1 = table2array(ToF1);
 clear opts
  
 %% Import Image
-I=imread('Test_data/Data3_Hands/PICT006.JPG');
+I=imread('Test_data/Data3_Hands/PICT004.JPG'); %Change this filepath to the desired image data file
 imshow(I)
 map=colormap;
 
